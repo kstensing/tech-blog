@@ -22,12 +22,12 @@ Comment.init({
     },
     created_at: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
     },
     updated_at: {
         type: DataTypes.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
     },
     post_id: {
