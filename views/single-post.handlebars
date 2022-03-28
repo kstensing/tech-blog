@@ -1,8 +1,4 @@
-<div>You are on the homepage</div>
-<ol class="">
-    {{#each posts as |post|}}
-  <li>
-    <article class="post">
+ <article class="post">
       <div class="title">
     <a href="/post/{{post.id}}" target="_blank">{{post.title}}</a>
       </div>
@@ -16,6 +12,3 @@
         <a href="/post/{{post.id}}">{{post.comments.length}} comment(s)</a>
       </div>
     </article>
-  </li>
-  {{/each}}
-</ol>
