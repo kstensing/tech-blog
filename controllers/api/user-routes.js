@@ -1,7 +1,11 @@
 const router = require('express').Router();
+const sequelize = require('../../config/connection');
 const {
-  User
+    Comment,
+    User,
+    Post
 } = require('../../models');
+const withAuth = require('../../utils/auth');
 
 router.get('/', (req, res) => {
   User.findAll({
@@ -33,6 +37,49 @@ router.post('/', (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
+});
+
+router.post('/login', (req, res) => {
+  // expects {username: 'test@gmail.com', password: 'test1234'}
+  User.findOne({
+    where: {
+      username: req.body.username
+    }
+  }).then(dbUserData => {
+    if (!dbUserData) {
+      res.status(400).json({
+        message: 'No user with that name found!'
+      });
+      return;
+    }
+
+    const validPassword = dbUserData.checkPassword(req.body.password);
+    if (!validPassword) {
+      res.status(400).json({
+        message: 'That password is incorrect!'
+      });
+      return;
+    }
+    req.session.save(() => {
+      req.session.user_id = dbUserData.id;
+      req.session.username = dbUserData.username;
+      req.session.loggedIn = true;
+      res.json({
+        user: dbUserData,
+        message: 'You are now logged in!'
+      });
+    });
+  });
+});
+
+router.post('/logout', (req, res) => {
+  if (req.session.loggedIn) {
+    req.session.destroy(() => {
+      res.status(204).end();
+    });
+  } else {
+    res.status(404).end();
+  }
 });
 
 module.exports = router;
