@@ -5,9 +5,10 @@ const {
     User,
     Comment
 } = require('../models');
+const withAuth = require('../utils/auth');
 
 
-router.get('/', (req, res) => {
+router.get('/', withAuth, (req, res) => {
     console.log('------');
     Post.findAll({
             attributes: [
@@ -36,7 +37,8 @@ router.get('/', (req, res) => {
                 plain: true
             }));
             res.render('homepage', {
-                posts
+                posts,
+                loggedIn: true
             });
         })
         .catch(err => {
@@ -45,7 +47,7 @@ router.get('/', (req, res) => {
         });
 });
 
-router.get('/post/:id', (req, res) => {
+router.get('/post/:id', withAuth, (req, res) => {
     Post.findOne({
             where: {
                 id: req.params.id

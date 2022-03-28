@@ -1,13 +1,52 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
-const { Post, User, Comment } = require('../models');
+const {
+    Post,
+    User,
+    Comment
+} = require('../models');
+const withAuth = require('../utils/auth');
 
-router.get('/', (req, res) => {
-    if (req.session.loggedIn) {
-        res.redirect('/');
-        return;
-    }
-    res.render('dashboard');
+router.get('/', withAuth, (req, res) => {
+    console.log("testing this route");
+Post.findAll({
+        where: {
+            user_id: req.session.user_id
+        },
+        attributes: [
+            'id',
+            'title',
+            'body',
+            'created_at',
+            'updated_at'
+        ],
+        include: [{
+                model: Comment,
+                attributes: ['id', 'body', 'created_at', 'updated_at', 'post_id', 'user_id'],
+                include: {
+                    model: User,
+                    attributes: ['username']
+                }
+            },
+            {
+                model: User,
+                attributes: ['username']
+            }
+        ]
+    })
+    .then(postData => {
+        const posts = postData.map(post => post.get({
+            plain: true
+        }));
+        res.render('dashboard', {
+            posts,
+            loggedIn: true
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
 });
 
 module.exports = router;
