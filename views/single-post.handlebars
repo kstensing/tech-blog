@@ -1,6 +1,6 @@
  <article class="post">
       <div class="title">
-    <a href="/post/{{post.id}}" target="_blank">{{post.title}}</a>
+    <a href="/post/{{post.id}}">{{post.title}}</a>
       </div>
       <div class="body">
        {{post.body}}
@@ -11,4 +11,27 @@
         
         <a href="/post/{{post.id}}">{{post.comments.length}} comment(s)</a>
       </div>
-    </article>
+      <form class="comment-input">
+    <div>
+        <textarea name="comment-body"></textarea>
+    </div>
+
+    <div>
+        <button type="submit">add comment</button>
+    </div>
+    </form>
+
+    <div class="comments">
+    {{#each post.comments}}
+        <section class="comment">
+            <div class="meta">
+             {{user.username}} on {{created_at}}
+            </div>
+                <div class="text">
+                {{body}}
+                </div>
+        </section>
+    {{/each}}
+</div>
+</article>
+<script src="/javascript/comment.js"></script>
