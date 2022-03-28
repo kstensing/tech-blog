@@ -1,40 +1,48 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
-const { Post, User, Comment } = require('../models');
+const {
+    Post,
+    User,
+    Comment
+} = require('../models');
 
 
 router.get('/', (req, res) => {
-  console.log('------');
-  Post.findAll({
-          attributes: [
-              'id',
-              'title',
-              'body',
-              'created_at',
-              'updated_at'
-          ],
-          include: [{
-                  model: Comment,
-                  attributes: ['id', 'body', 'created_at', 'updated_at', 'post_id', 'user_id'],
-                  include: {
-                      model: User,
-                      attributes: ['username']
-                  }
-              },
-              {
-                  model: User,
-                  attributes: ['username']
-              }
-          ]
-      })
-      .then(postData => {
-        const posts = postData.map(post => post.get({ plain: true }));
-        res.render('homepage', { posts });
-      })
-      .catch(err => {
-          console.log(err);
-          res.status(500).json(err);
-      });
+    console.log('------');
+    Post.findAll({
+            attributes: [
+                'id',
+                'title',
+                'body',
+                'created_at',
+                'updated_at'
+            ],
+            include: [{
+                    model: Comment,
+                    attributes: ['id', 'body', 'created_at', 'updated_at', 'post_id', 'user_id'],
+                    include: {
+                        model: User,
+                        attributes: ['username']
+                    }
+                },
+                {
+                    model: User,
+                    attributes: ['username']
+                }
+            ]
+        })
+        .then(postData => {
+            const posts = postData.map(post => post.get({
+                plain: true
+            }));
+            res.render('homepage', {
+                posts
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err);
+        });
 });
 
 router.get('/post/:id', (req, res) => {
@@ -70,24 +78,34 @@ router.get('/post/:id', (req, res) => {
                 });
                 return;
             }
-            const post = postData.get({ plain: true });
+            const post = postData.get({
+                plain: true
+            });
             res.render('single-post', {
                 post,
                 loggedIn: req.session.loggedIn
-              });
-          })
-          .catch(err => {
+            });
+        })
+        .catch(err => {
             console.log(err);
             res.status(500).json(err);
-          });
+        });
 });
 
 router.get('/login', (req, res) => {
     if (req.session.loggedIn) {
-      res.redirect('/');
-      return;
+        res.redirect('/');
+        return;
     }
     res.render('login');
-  });
+});
+
+// router.get('/dashboard', (req, res) => {
+//     if (req.session.loggedIn) {
+//         res.redirect('/');
+//         return;
+//     }
+//     res.render('dashboard');
+// });
 
 module.exports = router;
