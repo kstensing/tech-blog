@@ -3,7 +3,7 @@
 ## Description
   This is a blog site where you are able to publish articles, blog posts, and your thoughts and opinions.  When you visit for the first time, you will  have the option to sign up or sign in.  When you choose to sign up you will be prompted to create a username and password and will be signed in.  
   
-  [DEPLOYED APPLICATION LINK]()
+  [DEPLOYED APPLICATION LINK](https://enigmatic-sierra-94103.herokuapp.com/)
 
   ## Table of Contents
 
