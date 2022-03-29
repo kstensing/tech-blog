@@ -8,7 +8,7 @@ const {
 const withAuth = require('../utils/auth');
 
 
-router.get('/', withAuth, (req, res) => {
+router.get('/', (req, res) => {
     console.log('------');
     Post.findAll({
             attributes: [
@@ -37,8 +37,7 @@ router.get('/', withAuth, (req, res) => {
                 plain: true
             }));
             res.render('homepage', {
-                posts,
-                loggedIn: true
+                posts
             });
         })
         .catch(err => {
